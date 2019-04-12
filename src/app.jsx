@@ -75,7 +75,7 @@ class SpotCoverApp extends React.Component {
 
         let albumImageRender = [];
         this.state.albumUrls.map(url => {
-            albumImageRender.push(<img src={url} key={url} />)
+            albumImageRender.push(<img src={url} className="singleImage" key={url} />)
         })
 
         return (
@@ -106,8 +106,9 @@ class SpotCoverApp extends React.Component {
                     <br />
                     <br />
 
-                    {albumImageRender}
-
+                    <div className="imageContainer">
+                        {albumImageRender}
+                    </div>
                 </div>
             </div>
         );

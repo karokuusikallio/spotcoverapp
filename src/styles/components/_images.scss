@@ -1,0 +1,10 @@
+.imageContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    img {
+        width: 50%;
+        height: 50%;
+    }
+}
