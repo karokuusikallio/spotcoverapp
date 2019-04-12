@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import SpotifyWebApi from "spotify-web-api-js";
 import "normalize.css/normalize.css";
 import "./styles/styles.scss";
+import { stringify } from "querystring";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -16,8 +17,13 @@ class SpotCoverApp extends React.Component {
         }
         this.state = {
             loggedIn: token ? true : false,
-            nowPlaying: { name: 'Not Checked', albumArt: '' }
+            nowPlaying: { name: 'Not Checked', albumArt: '' },
+            query: "",
+            searchType: ['track'],
+            albumUrls: []
         }
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
     }
 
     getHashParams() {
@@ -44,7 +50,34 @@ class SpotCoverApp extends React.Component {
             })
     }
 
+    handleInputChange() {
+        let searchValue = encodeURIComponent(this.search.value.trim())
+        this.setState({
+            query: searchValue
+        })
+    }
+
+    handleSearch() {
+        let albumImageArray = [];
+        spotifyApi.searchTracks(this.state.query).then(results => {
+            results.tracks.items.map(item => {
+                albumImageArray.push(item.album.images[0].url);
+            })
+        }).then(() => {
+            this.setState({
+                albumUrls: albumImageArray
+            })
+        }
+        )
+    }
+
     render() {
+
+        let albumImageRender = [];
+        this.state.albumUrls.map(url => {
+            albumImageRender.push(<img src={url} key={url} />)
+        })
+
         return (
             <div className="App">
                 <a href='http://localhost:1410' > Login to Spotify </a>
@@ -60,6 +93,21 @@ class SpotCoverApp extends React.Component {
                 </div>
                 <div>
                     <img src={this.state.nowPlaying.albumArt} style={{ height: 539 }} />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+
+                    <form>
+                        <input type="text" placeholder="Write a track name" ref={input => this.search = input} onChange={this.handleInputChange} />
+                        <button type="submit" onClick={this.handleSearch}>Search from Spotify</button>
+                    </form>
+
+                    <br />
+                    <br />
+
+                    {albumImageRender}
+
                 </div>
             </div>
         );
