@@ -17,13 +17,17 @@ class SpotCoverApp extends React.Component {
         }
         this.state = {
             loggedIn: token ? true : false,
-            nowPlaying: { name: 'Not Checked', albumArt: '' },
             query: "",
-            searchType: ['track'],
-            albumUrls: []
+            albumUrls: [],
+            showInfo: false,
+            artistName: "",
+            albumName: "",
+            albumYear: "",
+            albumPlayLink: ""
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.showAlbumInfo = this.showAlbumInfo.bind(this);
     }
 
     getHashParams() {
@@ -38,18 +42,6 @@ class SpotCoverApp extends React.Component {
         return hashParams;
     }
 
-    getNowPlaying() {
-        spotifyApi.getMyCurrentPlaybackState()
-            .then((response) => {
-                this.setState({
-                    nowPlaying: {
-                        name: response.item.name,
-                        albumArt: response.item.album.images[0].url
-                    }
-                });
-            })
-    }
-
     handleInputChange() {
         let searchValue = encodeURIComponent(this.search.value.trim())
         this.setState({
@@ -59,9 +51,12 @@ class SpotCoverApp extends React.Component {
 
     handleSearch() {
         let albumImageArray = [];
-        spotifyApi.searchTracks(this.state.query).then(results => {
-            results.tracks.items.map(item => {
-                albumImageArray.push(item.album.images[0].url);
+        spotifyApi.searchAlbums(this.state.query).then(results => {
+            results.albums.items.map(item => {
+                let albumItem = [];
+                albumItem.push(item.id);
+                albumItem.push(item.images[0].url);
+                albumImageArray.push(albumItem);
             })
         }).then(() => {
             this.setState({
@@ -71,45 +66,68 @@ class SpotCoverApp extends React.Component {
         )
     }
 
+    showAlbumInfo(albumId) {
+        spotifyApi.getAlbum(albumId).then((response) => {
+            this.setState({
+                showInfo: true,
+                artistName: response.artists[0].name,
+                albumName: response.name,
+                albumYear: response.release_date,
+                albumPlayLink: response.external_urls.spotify
+            })
+        })
+    }
+
+    closeAlbumInfo(e) {
+        console.log(e.target);
+        if (e.target.className.indexOf("albumInfoModal") === -1) {
+            return
+        }
+        this.setState({
+            showInfo: false
+        })
+    }
+
     render() {
 
         let albumImageRender = [];
-        this.state.albumUrls.map(url => {
-            albumImageRender.push(<img src={url} className="singleImage" key={url} />)
-        })
+        this.state.albumUrls.map(album => {
+            albumImageRender.push(<img src={album[1]} className="singleImage" key={album[0]} onClick={e => this.showAlbumInfo(album[0])} />)
+        });
 
         return (
             <div className="App">
-                <a href='http://localhost:1410' > Login to Spotify </a>
-                <br />
-                <button onClick={() => {
-                    this.getNowPlaying()
-                }}>
-                    Get Track Played Now
-                </button>
-                <br />
-                <div>
-                    Now Playing: {this.state.nowPlaying.name}
-                </div>
-                <div>
-                    <img src={this.state.nowPlaying.albumArt} style={{ height: 539 }} />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
+                <div className="header">
+                    <h1>SpotCover App</h1>
 
                     <form>
                         <input type="text" placeholder="Write a track name" ref={input => this.search = input} onChange={this.handleInputChange} />
                         <button type="submit" onClick={this.handleSearch}>Search from Spotify</button>
                     </form>
-
-                    <br />
-                    <br />
-
-                    <div className="imageContainer">
-                        {albumImageRender}
-                    </div>
+                    <a href='http://localhost:1410'> Login to Spotify </a>
                 </div>
+
+
+                <div className="imageContainer">
+                    {albumImageRender}
+                </div>
+
+                {this.state.showInfo &&
+                    <div className="albumInfoModal" onClick={e => { this.closeAlbumInfo(e) }}>
+                        <div className="albumInfoContent">
+                            <h2>{`Artist: ${this.state.artistName}`}</h2>
+                            <h2>{`Album: ${this.state.albumName}`}</h2>
+                            <h2>{`Year: ${this.state.albumYear}`}</h2>
+                            <a href={this.state.albumPlayLink} target="_blank">Play the Album on Spotify</a>
+                            <span onClick={() => {
+                                this.setState({
+                                    showInfo: false
+                                })
+                            }}>Close Menu</span>
+                        </div>
+                    </div>
+
+                }
             </div>
         );
     }
