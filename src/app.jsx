@@ -4,6 +4,7 @@ import SpotifyWebApi from "spotify-web-api-js";
 import "normalize.css/normalize.css";
 import "./styles/styles.scss";
 import { stringify } from "querystring";
+import SpotCoverLogo from './img/spotCoverLogo.svg';
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -54,9 +55,12 @@ class SpotCoverApp extends React.Component {
         spotifyApi.searchAlbums(this.state.query).then(results => {
             results.albums.items.map(item => {
                 let albumItem = [];
-                albumItem.push(item.id);
-                albumItem.push(item.images[0].url);
-                albumImageArray.push(albumItem);
+
+                if (item.images.length > 0) {
+                    albumItem.push(item.id);
+                    albumItem.push(item.images[0].url);
+                    albumImageArray.push(albumItem);
+                }
             })
         }).then(() => {
             this.setState({
@@ -98,13 +102,16 @@ class SpotCoverApp extends React.Component {
         return (
             <div className="App">
                 <div className="header">
-                    <h1>SpotCover App</h1>
 
-                    <form>
-                        <input type="text" placeholder="Write a track name" ref={input => this.search = input} onChange={this.handleInputChange} />
-                        <button type="submit" onClick={this.handleSearch}>Search from Spotify</button>
+                    <SpotCoverLogo height={90} width={180} className="spotcoverlogo" />
+
+                    <form className="albumSearch">
+                        <p>Search an Album</p>
+                        <input type="text" placeholder="Write a track name" ref={input => this.search = input} onChange={this.handleInputChange} autoFocus />
+                        <button type="submit" onClick={this.handleSearch}><span>Search from Spotify</span></button>
+                        <a href='http://localhost:1410'> Login to Spotify </a>
                     </form>
-                    <a href='http://localhost:1410'> Login to Spotify </a>
+
                 </div>
 
 
@@ -115,9 +122,10 @@ class SpotCoverApp extends React.Component {
                 {this.state.showInfo &&
                     <div className="albumInfoModal" onClick={e => { this.closeAlbumInfo(e) }}>
                         <div className="albumInfoContent">
-                            <h2>{`Artist: ${this.state.artistName}`}</h2>
-                            <h2>{`Album: ${this.state.albumName}`}</h2>
-                            <h2>{`Year: ${this.state.albumYear}`}</h2>
+                            <h2>Album Info</h2>
+                            <p>{`Artist: ${this.state.artistName}`}</p>
+                            <p>{`Album: ${this.state.albumName}`}</p>
+                            <h4>{`Year: ${this.state.albumYear}`}</h4>
                             <a href={this.state.albumPlayLink} target="_blank">Play the Album on Spotify</a>
                             <span onClick={() => {
                                 this.setState({

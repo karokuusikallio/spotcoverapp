@@ -8,8 +8,7 @@ module.exports = {
   },
   mode: "development",
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.jsx$/,
         exclude: /(node_modules|bower_components)/,
         use: {
@@ -19,6 +18,19 @@ module.exports = {
       {
         test: /\.s?css$/,
         use: ["style-loader", "css-loader", "sass-loader"]
+      },
+      {
+        test: /\.svg$/,
+        use: [{
+            loader: "babel-loader"
+          },
+          {
+            loader: "react-svg-loader",
+            options: {
+              jsx: true // true outputs JSX tags
+            }
+          }
+        ]
       }
     ]
   },

@@ -17,6 +17,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "file-loader": "^3.0.1",
     "live-server": "^1.2.1",
     "node-sass": "^4.11.0",
     "normalize.css": "^8.0.1",
@@ -25,12 +26,14 @@
     "react-modal": "^3.8.1",
     "sass-loader": "^7.1.0",
     "spotify-web-api-js": "^1.2.0",
+    "url-loader": "^1.1.2",
     "validator": "^10.11.0",
     "webpack": "^4.29.6",
     "webpack-dev-server": "^3.2.1"
   },
   "devDependencies": {
     "css-loader": "^1.0.1",
+    "react-svg-loader": "^2.1.0",
     "style-loader": "^0.23.1",
     "webpack-cli": "^3.3.0"
   }

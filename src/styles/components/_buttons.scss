@@ -1,0 +1,10 @@
+@mixin spotButton {
+    padding: 10px;
+    margin: 20px;
+    background: $spotRed;
+    border: none;
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,74 @@
+@mixin spotH1 {
+    font-family: brandon-grotesque, sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 32px;
+    color: $spotRed;
+}
+
+@mixin spotH2 {
+    font-family: brandon-grotesque, sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 26px;
+    color: $spotRed;
+}
+
+@mixin spotH3 {
+    font-family: brandon-grotesque, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 24px;
+    text-transform: capitalize;
+    color: $spotRed;
+}
+
+@mixin spotH4 {
+    font-family: brandon-grotesque, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 26px;
+    color: $spotRed;
+}
+
+@mixin spotP {
+    font-family: brandon-grotesque, sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 18px;
+    color: $spotRed;
+}
+
+@mixin spotSpan {
+    font-family: brandon-grotesque, sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 18px;
+    color: white;
+}
+
+body {
+    h1 {
+        @include spotH1;
+    }
+
+    h2 {
+        @include spotH2;
+    }
+
+    h3 {
+        @include spotH3;
+    }
+
+    h4 {
+        @include spotH4;
+    }
+
+    p {
+        @include spotP;
+    }
+
+    span {
+        @include spotSpan;
+    }
+}
