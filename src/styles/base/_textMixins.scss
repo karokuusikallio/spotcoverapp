@@ -71,4 +71,8 @@ body {
     span {
         @include spotSpan;
     }
+
+    a {
+        text-decoration: none;
+    }
 }

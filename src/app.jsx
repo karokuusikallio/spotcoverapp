@@ -44,15 +44,17 @@ class SpotCoverApp extends React.Component {
     }
 
     handleInputChange() {
-        let searchValue = encodeURIComponent(this.search.value.trim())
         this.setState({
-            query: searchValue
+            query: this.search.value
         })
     }
 
-    handleSearch() {
+    handleSearch(event) {
+        event.preventDefault();
         let albumImageArray = [];
+        console.log(this.state.query);
         spotifyApi.searchAlbums(this.state.query).then(results => {
+            console.log(results);
             results.albums.items.map(item => {
                 let albumItem = [];
 
@@ -67,23 +69,37 @@ class SpotCoverApp extends React.Component {
                 albumUrls: albumImageArray
             })
         }
-        )
+        ).catch(error => {
+            if (error.status == "401" || error.status == "401") {
+                window.location.replace("http://localhost:1410/login")
+
+            } else {
+                console.log("Http Request Error:");
+                console.log(error);
+            }
+        })
     }
 
     showAlbumInfo(albumId) {
         spotifyApi.getAlbum(albumId).then((response) => {
+            let albumYear = response.release_date.split("-")[0];
+
+            let artistNames = [];
+            for (let i = 0; i < response.artists.length; i++) {
+                artistNames.push(response.artists[i].name);
+            }
+
             this.setState({
                 showInfo: true,
-                artistName: response.artists[0].name,
+                artistName: artistNames.join(", "),
                 albumName: response.name,
-                albumYear: response.release_date,
+                albumYear: albumYear,
                 albumPlayLink: response.external_urls.spotify
             })
         })
     }
 
     closeAlbumInfo(e) {
-        console.log(e.target);
         if (e.target.className.indexOf("albumInfoModal") === -1) {
             return
         }
@@ -93,7 +109,6 @@ class SpotCoverApp extends React.Component {
     }
 
     render() {
-
         let albumImageRender = [];
         this.state.albumUrls.map(album => {
             albumImageRender.push(<img src={album[1]} className="singleImage" key={album[0]} onClick={e => this.showAlbumInfo(album[0])} />)
@@ -105,15 +120,13 @@ class SpotCoverApp extends React.Component {
 
                     <SpotCoverLogo height={90} width={180} className="spotcoverlogo" />
 
-                    <form className="albumSearch">
-                        <p>Search an Album</p>
-                        <input type="text" placeholder="Write a track name" ref={input => this.search = input} onChange={this.handleInputChange} autoFocus />
-                        <button type="submit" onClick={this.handleSearch}><span>Search from Spotify</span></button>
-                        <a href='http://localhost:1410'> Login to Spotify </a>
+                    <form onSubmit={this.handleSearch} className="albumSearch">
+                        <p>Discover Album Cover Art</p>
+                        <input type="text" placeholder="Search..." ref={input => this.search = input} onChange={this.handleInputChange} autoFocus />
+                        <button type="submit"><span>Search from Spotify</span></button>
                     </form>
 
                 </div>
-
 
                 <div className="imageContainer">
                     {albumImageRender}
@@ -125,8 +138,8 @@ class SpotCoverApp extends React.Component {
                             <h2>Album Info</h2>
                             <p>{`Artist: ${this.state.artistName}`}</p>
                             <p>{`Album: ${this.state.albumName}`}</p>
-                            <h4>{`Year: ${this.state.albumYear}`}</h4>
-                            <a href={this.state.albumPlayLink} target="_blank">Play the Album on Spotify</a>
+                            <p>{`Year: ${this.state.albumYear}`}</p>
+                            <a href={this.state.albumPlayLink} target="_blank" className="playbutton">Play the Album</a>
                             <span onClick={() => {
                                 this.setState({
                                     showInfo: false
@@ -134,7 +147,6 @@ class SpotCoverApp extends React.Component {
                             }}>Close Menu</span>
                         </div>
                     </div>
-
                 }
             </div>
         );
