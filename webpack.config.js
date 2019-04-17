@@ -34,7 +34,7 @@ module.exports = {
       }
     ]
   },
-  devtool: "cheap-module-eval-source-map",
+  devtool: false,
   devServer: {
     contentBase: "./public",
     hot: true

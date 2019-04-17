@@ -1,8 +1,10 @@
-@import "./base/settings";
 @import "./base/base";
 @import "./base/borders";
-@import "./base/textMixins";
+@import "./base/textstyles";
 @import "./base/breakpoints";
+@import "./base/buttons";
 
-@import "./components/buttons";
+@import "./components/header";
+@import "./components/footer";
+@import "./components/modal";
 @import "./components/images";

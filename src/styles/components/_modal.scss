@@ -1,0 +1,29 @@
+.albumInfoModal {
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.albumInfoContent {
+    z-index: 101;
+    background-color: #fefefe;
+    margin: 20% auto;
+    padding: 20px 100px;
+    text-align: center;
+    display: inline-block;
+}
+
+.playbutton {
+    @include spotButton;
+    @include spotH4;
+    color: white;
+    margin-top: 40px !important;
+}
