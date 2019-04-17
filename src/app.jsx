@@ -5,6 +5,7 @@ import "normalize.css/normalize.css";
 import "./styles/styles.scss";
 import { stringify } from "querystring";
 import SpotCoverLogo from './img/spotCoverLogo.svg';
+import SpotCoverLogoMobile from './img/spotCoverLogoMobile.svg';
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -159,10 +160,11 @@ class SpotCoverApp extends React.Component {
                 <div className="header">
 
                     <SpotCoverLogo height={90} width={180} className="spotcoverlogo" />
+                    <SpotCoverLogoMobile height={50} className="spotcoverlogomobile" />
 
                     <div className="headerRight">
                         <form onSubmit={this.handleSearch} className="albumSearch">
-                            <p>Discover Album Cover Art from Spotify</p>
+                            <p className="discoverText">Discover Album Cover Art from Spotify</p>
                             <input type="text" placeholder="Search..." ref={input => this.search = input} onChange={this.handleInputChange} autoFocus />
                             <button type="submit" className="spotButton" onClick={() => {
                                 this.setState({
