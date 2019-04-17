@@ -14,6 +14,38 @@
     }
 }
 
+.headerRight {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.footer {
+    width: 100%;
+    display: flex;
+    height: 100px;
+    bottom: 0;
+    position: fixed;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 103;
+}
+
+.footerText {
+    background: rgba(0, 0, 0, 0.7);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px;
+
+    p,
+    select {
+        margin: 20px;
+        height: 20px;
+    }
+}
+
 .spotcoverlogo {
     padding: 0 50px;
 }
@@ -22,7 +54,6 @@
     display: flex;
     height: 40px;
     align-items: center;
-    padding: 0 50px;
 
     input {
         background: none;
@@ -36,22 +67,35 @@
             outline: none;
         }
     }
+}
 
-    button {
-        @include spotButton;
-        cursor: pointer;
-    }
+.spotButton {
+    @include spotButton;
 }
 
 .imageContainer {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+}
 
-    img {
-        width: 50%;
-        height: 50%;
-    }
+.singleImage {
+    cursor: pointer;
+}
+
+.PerRow2 {
+    width: 50%;
+    height: 50%;
+}
+
+.PerRow3 {
+    width: 33.33%;
+    height: 33.33%;
+}
+
+.PerRow4 {
+    width: 25%;
+    height: 25%;
 }
 
 .albumInfoModal {
@@ -72,7 +116,7 @@
     z-index: 101;
     background-color: #fefefe;
     margin: 20% auto;
-    padding: 50px 100px;
+    padding: 20px 100px;
     text-align: center;
     display: inline-block;
 }
@@ -81,5 +125,5 @@
     @include spotButton;
     @include spotH4;
     color: white;
-    margin: 40px 20px 20px 20px !important;
+    margin-top: 40px !important;
 }
