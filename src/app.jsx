@@ -3,9 +3,9 @@ import ReactDOM from "react-dom";
 import SpotifyWebApi from "spotify-web-api-js";
 import "normalize.css/normalize.css";
 import "./styles/styles.scss";
-import { stringify } from "querystring";
 import SpotCoverLogo from './img/spotCoverLogo.svg';
 import SpotCoverLogoMobile from './img/spotCoverLogoMobile.svg';
+import spotifyLogin from './components/spotifyLogin.js';
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -37,7 +37,7 @@ class SpotCoverApp extends React.Component {
     }
 
     componentDidMount() {
-        this.handleRandomSearch();
+        document.body.classList.add("recordStore");
     }
 
     getHashParams() {
@@ -61,6 +61,11 @@ class SpotCoverApp extends React.Component {
     handleSearch(event) {
         if (event) {
             event.preventDefault();
+        }
+
+        const backgroundImage = document.getElementsByClassName("recordStore");
+        if (backgroundImage[0]) {
+            document.body.classList.remove("recordStore");
         }
 
         let albumImageArray = [];
@@ -90,9 +95,8 @@ class SpotCoverApp extends React.Component {
             })
         }
         ).catch(error => {
-            if (error.status == "401" || error.status == "401") {
-                window.location.replace("http://localhost:1410/login")
-
+            if (error.status == "401" || error.status == "403") {
+                spotifyLogin();
             } else {
                 console.log("Http Request Error:");
                 console.log(error);
