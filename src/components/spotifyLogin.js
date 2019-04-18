@@ -3,8 +3,8 @@ const spotifyLogin = () => {
 
     localStorage.removeItem(stateKey);
 
-    const client_id = "7c64dfad73b545f8a9f18f29bda0e26c";
-    const redirect_uri = "http://localhost:8080/";
+    const client_id = "4e6071166a0c4948b69aa1366a1cc548";
+    const redirect_uri = "https://spotcover.appspot.com/";
     const scope = "user-read-private user-read-email";
     const state = generateRandomString(16);
 
