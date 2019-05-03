@@ -6,6 +6,9 @@ import "./styles/styles.scss";
 import SpotCoverLogo from './img/spotCoverLogo.svg';
 import SpotCoverLogoMobile from './img/spotCoverLogoMobile.svg';
 import spotifyLogin from './components/spotifyLogin.js';
+import AlbumModal from './components/AlbumModal.jsx';
+import Footer from './components/Footer.jsx';
+import Images from './components/Images.jsx';
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -34,6 +37,7 @@ class SpotCoverApp extends React.Component {
         this.showAlbumInfo = this.showAlbumInfo.bind(this);
         this.handleImageSizing = this.handleImageSizing.bind(this);
         this.handleRandomSearch = this.handleRandomSearch.bind(this);
+        this.closeAlbumInfo = this.closeAlbumInfo.bind(this);
     }
 
     componentDidMount() {
@@ -152,12 +156,6 @@ class SpotCoverApp extends React.Component {
     }
 
     render() {
-        let imageSizing = `PerRow${this.state.imageSizing}`;
-
-        let albumImageRender = [];
-        this.state.albumUrls.map(album => {
-            albumImageRender.push(<img src={album[1]} className={`singleImage ${imageSizing}`} key={album[0]} onClick={e => this.showAlbumInfo(album[0])} />)
-        });
 
         return (
             <div className="App">
@@ -180,41 +178,19 @@ class SpotCoverApp extends React.Component {
                     </div>
                 </div>
 
-                <div className="imageContainer">
-                    {albumImageRender}
-                </div>
+                <Images sizing={this.state.imageSizing} albumUrls={this.state.albumUrls} showAlbumInfo={this.showAlbumInfo} />
 
-                <div className="footer">
-                    <div className="footerText perRowSelection">
-                        <p>Images Per Row</p>
-                        <select value={this.state.imageSizing} onChange={this.handleImageSizing}>
-                            <option value={2}>2</option>
-                            <option value={3}>3</option>
-                            <option value={4}>4</option>
-                        </select>
-                    </div>
-
-                    <div className="footerText">
-                        <p>2019 © Karo Kuusikallio</p>
-                    </div>
-
-                </div>
+                <Footer value={this.state.imageSizing} onChange={this.handleImageSizing} />
 
                 {this.state.showInfo &&
-                    <div className="albumInfoModal" onClick={e => { this.closeAlbumInfo(e) }}>
-                        <div className="albumInfoContent">
-                            <h2>Album Info</h2>
-                            <p>{`Artist: ${this.state.artistName}`}</p>
-                            <p>{`Album: ${this.state.albumName}`}</p>
-                            <p>{`Year: ${this.state.albumYear}`}</p>
-                            <a href={this.state.albumPlayLink} target="_blank" className="playbutton">Play the Album</a>
-                            <span onClick={() => {
-                                this.setState({
-                                    showInfo: false
-                                })
-                            }}>Close Menu</span>
-                        </div>
-                    </div>
+                    <AlbumModal
+                        artist={this.state.artistName}
+                        album={this.state.albumName}
+                        album={this.state.albumName}
+                        year={this.state.albumYear}
+                        albumLink={this.state.albumPlayLink}
+                        closeAlbum={this.closeAlbumInfo}
+                    />
                 }
             </div>
         );

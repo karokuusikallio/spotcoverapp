@@ -60,7 +60,7 @@ module.exports = {
       }
     ]
   },
-  devtool: false,
+  devtool: 'cheap-module-eval-source-map',
   devServer: {
     contentBase: "./public",
     hot: true
