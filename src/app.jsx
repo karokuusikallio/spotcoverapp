@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import SpotifyWebApi from "spotify-web-api-js";
+import InfiniteScroll from 'react-infinite-scroll-component';
 import "normalize.css/normalize.css";
 import "./styles/styles.scss";
 import SpotCoverLogo from './img/spotCoverLogo.svg';
@@ -30,7 +31,9 @@ class SpotCoverApp extends React.Component {
             albumYear: "",
             albumPlayLink: "",
             imageSizing: 2,
-            randomSearch: false
+            randomSearch: false,
+            offset: 0,
+            loadfromScroll: false
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -38,6 +41,7 @@ class SpotCoverApp extends React.Component {
         this.handleImageSizing = this.handleImageSizing.bind(this);
         this.handleRandomSearch = this.handleRandomSearch.bind(this);
         this.closeAlbumInfo = this.closeAlbumInfo.bind(this);
+        this.loadMore = this.loadMore.bind(this);
     }
 
     componentDidMount() {
@@ -74,7 +78,7 @@ class SpotCoverApp extends React.Component {
 
         let albumImageArray = [];
 
-        spotifyApi.searchAlbums(this.state.query).then(results => {
+        spotifyApi.searchAlbums(this.state.query, { limit: 40, offset: this.state.offset }).then(results => {
 
             if (this.state.randomSearch && results.albums.items.length < 4) {
                 this.handleRandomSearch();
@@ -93,8 +97,10 @@ class SpotCoverApp extends React.Component {
                 })
             }
         }).then(() => {
+            const concatAlbumImageArray = this.state.albumUrls.concat(albumImageArray);
+
             this.setState({
-                albumUrls: albumImageArray,
+                albumUrls: this.state.loadfromScroll ? concatAlbumImageArray : albumImageArray,
                 showInfo: false
             })
         }
@@ -108,13 +114,25 @@ class SpotCoverApp extends React.Component {
         })
     }
 
+    loadMore() {
+        this.setState((prevState) => ({
+            offset: prevState.offset + 40,
+            loadfromScroll: true
+        }), () => {
+            this.handleSearch();
+        }
+        )
+    }
+
     handleRandomSearch() {
         const randomWord = require('random-words');
         const searchWord = randomWord();
 
         this.setState({
             query: searchWord,
-            randomSearch: true
+            randomSearch: true,
+            loadfromScroll: false,
+            offset: 0
         }, () => {
             this.handleSearch();
             this.search.value = "";
@@ -156,6 +174,7 @@ class SpotCoverApp extends React.Component {
     }
 
     render() {
+        console.log(this.state.offset);
 
         return (
             <div className="App">
@@ -170,7 +189,9 @@ class SpotCoverApp extends React.Component {
                             <input type="text" placeholder="Search..." ref={input => this.search = input} onChange={this.handleInputChange} autoFocus />
                             <button type="submit" className="spotButton" onClick={() => {
                                 this.setState({
-                                    randomSearch: false
+                                    randomSearch: false,
+                                    loadfromScroll: false,
+                                    offset: 0
                                 })
                             }}><span>Let's Go!</span></button>
                         </form>
@@ -178,11 +199,18 @@ class SpotCoverApp extends React.Component {
                     </div>
                 </div>
 
-                <Images sizing={this.state.imageSizing} albumUrls={this.state.albumUrls} showAlbumInfo={this.showAlbumInfo} />
+                <InfiniteScroll
+                    dataLength={this.state.albumUrls.length}
+                    next={this.loadMore}
+                    hasMore={true}
+                    loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}>
+                    <Images sizing={this.state.imageSizing} albumUrls={this.state.albumUrls} showAlbumInfo={this.showAlbumInfo} />
+                </InfiniteScroll >
 
                 <Footer value={this.state.imageSizing} onChange={this.handleImageSizing} />
 
-                {this.state.showInfo &&
+                {
+                    this.state.showInfo &&
                     <AlbumModal
                         artist={this.state.artistName}
                         album={this.state.albumName}
