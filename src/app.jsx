@@ -46,6 +46,10 @@ class SpotCoverApp extends React.Component {
 
     componentDidMount() {
         document.body.classList.add("recordStore");
+
+        if (!this.state.loggedIn) {
+            spotifyLogin();
+        }
     }
 
     getHashParams() {
@@ -86,7 +90,6 @@ class SpotCoverApp extends React.Component {
             }
             else {
                 results.albums.items.map(item => {
-
                     let albumItem = [];
 
                     if (item.images.length > 0) {
@@ -101,7 +104,6 @@ class SpotCoverApp extends React.Component {
 
             this.setState({
                 albumUrls: this.state.loadfromScroll ? concatAlbumImageArray : albumImageArray,
-                showInfo: false
             })
         }
         ).catch(error => {
@@ -132,7 +134,8 @@ class SpotCoverApp extends React.Component {
             query: searchWord,
             randomSearch: true,
             loadfromScroll: false,
-            offset: 0
+            offset: 0,
+            showInfo: false
         }, () => {
             this.handleSearch();
             this.search.value = "";
@@ -174,8 +177,6 @@ class SpotCoverApp extends React.Component {
     }
 
     render() {
-        console.log(this.state.offset);
-
         return (
             <div className="App">
                 <div className="header">
@@ -191,6 +192,7 @@ class SpotCoverApp extends React.Component {
                                 this.setState({
                                     randomSearch: false,
                                     loadfromScroll: false,
+                                    showInfo: false,
                                     offset: 0
                                 })
                             }}><span>Let's Go!</span></button>
@@ -203,7 +205,7 @@ class SpotCoverApp extends React.Component {
                     dataLength={this.state.albumUrls.length}
                     next={this.loadMore}
                     hasMore={true}
-                    loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}>
+                >
                     <Images sizing={this.state.imageSizing} albumUrls={this.state.albumUrls} showAlbumInfo={this.showAlbumInfo} />
                 </InfiniteScroll >
 
