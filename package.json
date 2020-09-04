@@ -21,7 +21,7 @@
     "live-server": "^1.2.1",
     "lodash": "^4.17.15",
     "mixin-deep": "^2.0.1",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "normalize.css": "^8.0.1",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "random-words": "^1.1.0",
